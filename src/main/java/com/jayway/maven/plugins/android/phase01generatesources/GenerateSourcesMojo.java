@@ -408,6 +408,10 @@ public class GenerateSourcesMojo extends AbstractAndroidMojo
             commands.add( "-c" );
             commands.add( configurations );
         }
+        for ( String aaptExtraArg : aaptExtraArgs )
+        {
+            commands.add( aaptExtraArg );
+        }
         getLog().info( getAndroidSdk().getPathForTool( "aapt" ) + " " + commands.toString() );
         try
         {
@@ -496,6 +500,10 @@ public class GenerateSourcesMojo extends AbstractAndroidMojo
         {
             commands.add( "-c" );
             commands.add( configurations );
+        }
+        for ( String aaptExtraArg : aaptExtraArgs )
+        {
+            commands.add( aaptExtraArg );
         }
         getLog().info( getAndroidSdk().getPathForTool( "aapt" ) + " " + commands.toString() );
         try
