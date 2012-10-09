@@ -16,6 +16,10 @@ public class Test
      */
     private String skip;
     /**
+     * Mirror of {@link com.jayway.maven.plugins.android.AbstractInstrumentationMojo#testDontFail}
+     */
+    private String dontFail;
+    /**
      * Mirror of {@link com.jayway.maven.plugins.android.AbstractInstrumentationMojo#testInstrumentationPackage}
      */
     private String instrumentationPackage;
@@ -67,6 +71,11 @@ public class Test
     public String getSkip()
     {
         return skip;
+    }
+
+    public String getDontFail()
+    {
+        return dontFail;
     }
 
     public String getInstrumentationPackage()

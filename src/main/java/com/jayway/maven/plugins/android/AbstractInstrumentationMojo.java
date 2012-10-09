@@ -125,6 +125,14 @@ public abstract class AbstractInstrumentationMojo extends AbstractAndroidMojo
     private String testSkip;
 
     /**
+     * Enable or disable failing maven build due to failed tests. if <code>true</code> then there will
+     * be only printed log. If <code>false</code> then maven build will be terminated.
+     *
+     * @parameter expression="${android.test.dontFail}" default-value="false"
+     */
+    private String testDontFail;
+    
+    /**
      * Package name of the apk we wish to instrument. If not specified, it is inferred from
      * <code>AndroidManifest.xml</code>.
      *
@@ -277,6 +285,7 @@ public abstract class AbstractInstrumentationMojo extends AbstractAndroidMojo
 
     // the parsed parameters from the plugin config or properties from command line or pom or settings
     private String parsedSkip;
+    private String parsedDontFail;
     private String parsedInstrumentationPackage;
     private String parsedInstrumentationRunner;
     private List<String> parsedClasses;
@@ -387,7 +396,14 @@ public abstract class AbstractInstrumentationMojo extends AbstractAndroidMojo
                     remoteAndroidTestRunner.run( testRunListener );
                     if ( testRunListener.hasFailuresOrErrors() )
                     {
-                        throw new MojoFailureException( "Tests failed on device." );
+                    	if ( "true".equalsIgnoreCase( parsedDontFail ) )
+                    	{
+                    		getLog().error( "Tests failed on device." );
+                    	}
+                    	else
+                    	{
+                    		throw new MojoFailureException( "Tests failed on device." );
+                    	}
                     }
                     if ( testRunListener.testRunFailed() )
                     {
@@ -435,6 +451,14 @@ public abstract class AbstractInstrumentationMojo extends AbstractAndroidMojo
             else
             {
                 parsedSkip = testSkip;
+            }
+            if ( StringUtils.isNotEmpty( test.getDontFail() ) )
+            {
+                parsedDontFail = test.getDontFail();
+            }
+            else
+            {
+            	parsedDontFail = testDontFail;
             }
             if ( StringUtils.isNotEmpty( test.getInstrumentationPackage() ) )
             {
@@ -537,6 +561,7 @@ public abstract class AbstractInstrumentationMojo extends AbstractAndroidMojo
         else
         {
             parsedSkip = testSkip;
+            parsedDontFail = testDontFail;
             parsedInstrumentationPackage = testInstrumentationPackage;
             parsedInstrumentationRunner = testInstrumentationRunner;
             parsedClasses = testClasses;
